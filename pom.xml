@@ -22,7 +22,6 @@
 
     <properties>
         <java.version>11</java.version>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
 
     <build>
