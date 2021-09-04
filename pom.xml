@@ -42,7 +42,6 @@
 
     <scm>
         <developerConnection>scm:git:https://github.com/NghiemQuangCuong/spring-pet-clinic.git</developerConnection>
-      <tag>spring-pet-clinic-0.0.1</tag>
   </scm>
 
 </project>
