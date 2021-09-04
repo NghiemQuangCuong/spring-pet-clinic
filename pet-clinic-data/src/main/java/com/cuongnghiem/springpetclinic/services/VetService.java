@@ -1,6 +1,6 @@
 package com.cuongnghiem.springpetclinic.services;
 
-import com.cuongnghiem.springpetclinic.model.Pet;
+import com.cuongnghiem.springpetclinic.model.Vet;
 
 import java.util.Set;
 
@@ -9,9 +9,9 @@ import java.util.Set;
  **/
 
 public interface VetService {
-    Pet findById(Long id);
+    Vet findById(Long id);
 
-    Pet save(Pet pet);
+    Vet save(Vet pet);
 
-    Set<Pet> findAll();
+    Set<Vet> findAll();
 }
