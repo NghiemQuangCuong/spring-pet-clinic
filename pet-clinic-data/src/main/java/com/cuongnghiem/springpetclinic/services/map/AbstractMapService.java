@@ -1,5 +1,7 @@
 package com.cuongnghiem.springpetclinic.services.map;
 
+import com.cuongnghiem.springpetclinic.services.CrudService;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,27 +11,27 @@ import java.util.Set;
  * Created by cuongnghiem on 10/09/2021
  **/
 
-public abstract class AbstractMapService<T, ID> {
+public abstract class AbstractMapService<T, ID> implements CrudService<T, ID>{
     protected Map<ID, T> map = new HashMap<>();
 
-    protected T findById(ID id){
+    public T findById(ID id){
         return map.get(id);
     }
 
-    protected Set<T> findAll(){
+    public Set<T> findAll(){
         return new HashSet<>(map.values());
     }
 
-    protected T save(ID id, T object){
+    public T save(ID id, T object){
         map.put(id, object);
         return object;
     }
 
-    protected void deleteById(ID id){
+    public void deleteById(ID id){
         map.remove(id);
     }
 
-    protected void delete(T object){
+    public void delete(T object){
         map.entrySet().removeIf(entry -> entry.getValue().equals(object));
     }
 }
