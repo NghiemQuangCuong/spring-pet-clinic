@@ -11,20 +11,17 @@ class OwnerServiceMapTest {
     @BeforeEach
     void setUp() {
         Owner owner1 = new Owner();
-        owner1.setId(1L);
         owner1.setFirstName("Cuong");
         owner1.setLastName("Nghiem");
         Owner owner2 = new Owner();
-        owner2.setId(2L);
         owner2.setFirstName("Quang");
         owner2.setLastName("Nghiem");
         Owner owner3 = new Owner();
-        owner3.setId(3L);
         owner3.setFirstName("Anh");
         owner3.setLastName("Tran");
-        ownerServiceMap.save(owner1.getId(), owner1);
-        ownerServiceMap.save(owner2.getId(), owner2);
-        ownerServiceMap.save(owner3.getId(), owner3);
+        ownerServiceMap.save(owner1);
+        ownerServiceMap.save(owner2);
+        ownerServiceMap.save(owner3);
     }
 
     @Test

@@ -10,14 +10,11 @@ class PetServiceMapTest {
     @BeforeEach
     void setUp() {
         Pet pet1 = new Pet();
-        pet1.setId(1L);
         Pet pet2 = new Pet();
-        pet2.setId(2L);
         Pet pet3 = new Pet();
-        pet3.setId(3L);
-        petServiceMap.save(pet1.getId(), pet1);
-        petServiceMap.save(pet2.getId(), pet2);
-        petServiceMap.save(pet3.getId(), pet3);
+        petServiceMap.save(pet1);
+        petServiceMap.save(pet2);
+        petServiceMap.save(pet3);
     }
 
     @Test

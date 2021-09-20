@@ -1,18 +1,16 @@
 package com.cuongnghiem.springpetclinic.services.map;
 
+import com.cuongnghiem.springpetclinic.model.BaseEntity;
 import com.cuongnghiem.springpetclinic.services.CrudService;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by cuongnghiem on 10/09/2021
  **/
 
-public abstract class AbstractMapService<T, ID> implements CrudService<T, ID>{
-    protected Map<ID, T> map = new HashMap<>();
+public abstract class AbstractMapService<T extends BaseEntity, ID extends Long> implements CrudService<T, ID>{
+    protected Map<Long, T> map = new HashMap<>();
 
     public T findById(ID id){
         return map.get(id);
@@ -22,8 +20,15 @@ public abstract class AbstractMapService<T, ID> implements CrudService<T, ID>{
         return new HashSet<>(map.values());
     }
 
-    public T save(ID id, T object){
-        map.put(id, object);
+    public T save(T object) {
+        if (object != null) {
+            Long nextId = getNextId();
+            map.put(nextId, object);
+            object.setId(nextId);
+        }
+        else
+            throw new RuntimeException("Object must not be null");
+
         return object;
     }
 
@@ -33,5 +38,12 @@ public abstract class AbstractMapService<T, ID> implements CrudService<T, ID>{
 
     public void delete(T object){
         map.entrySet().removeIf(entry -> entry.getValue().equals(object));
+    }
+
+    private Long getNextId(){
+        if (map.isEmpty())
+            return 1L;
+
+        return Collections.max(map.keySet()) + 1L;
     }
 }
