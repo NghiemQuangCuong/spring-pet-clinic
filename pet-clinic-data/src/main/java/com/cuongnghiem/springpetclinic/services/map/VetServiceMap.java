@@ -19,10 +19,8 @@ public class VetServiceMap extends AbstractMapService<Vet, Long> implements VetS
     @Override
     public Vet save(Vet object) {
         if (object != null) {
-            Long nextId = super.getNextId();
-            map.put(nextId, object);
-            object.setId(nextId);
-
+            // we want to make sure specialty of vet object will all available in map persistance.
+            // if not, we will save that.
             object.getSpecialties().forEach(specialty -> {
                 if (specialty != null && specialty.getId() == null) {
                     specialtyService.save(specialty);
@@ -30,6 +28,10 @@ public class VetServiceMap extends AbstractMapService<Vet, Long> implements VetS
                     throw new RuntimeException("Specialty must not be null");
                 }
             });
+
+            Long nextId = super.getNextId();
+            map.put(nextId, object);
+            object.setId(nextId);
         }
         else
             throw new RuntimeException("Object must not be null");

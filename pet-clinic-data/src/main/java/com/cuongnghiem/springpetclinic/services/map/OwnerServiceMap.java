@@ -26,10 +26,6 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
     @Override
     public Owner save(Owner object) {
         if (object != null) {
-            Long nextId = super.getNextId();
-            map.put(nextId, object);
-            object.setId(nextId);
-
             // we want to make sure pet and pettype of owner object will all available in map persistance.
             // if not, we will save that.
             object.getPets().forEach(pet -> {
@@ -45,6 +41,10 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
                     throw new RuntimeException("Pet must have a PetType");
                 }
             });
+
+            Long nextId = super.getNextId();
+            map.put(nextId, object);
+            object.setId(nextId);
         }
         else
             throw new RuntimeException("Object must not be null");
