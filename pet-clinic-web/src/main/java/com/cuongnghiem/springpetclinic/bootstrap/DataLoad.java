@@ -1,8 +1,10 @@
 package com.cuongnghiem.springpetclinic.bootstrap;
 
 import com.cuongnghiem.springpetclinic.model.Owner;
+import com.cuongnghiem.springpetclinic.model.PetType;
 import com.cuongnghiem.springpetclinic.model.Vet;
 import com.cuongnghiem.springpetclinic.services.OwnerService;
+import com.cuongnghiem.springpetclinic.services.PetTypeService;
 import com.cuongnghiem.springpetclinic.services.VetService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -16,10 +18,12 @@ public class DataLoad implements CommandLineRunner {
 
     private final OwnerService ownerService;
     private final VetService vetService;
+    private final PetTypeService petTypeService;
 
-    public DataLoad(OwnerService ownerService, VetService vetService) {
+    public DataLoad(OwnerService ownerService, VetService vetService, PetTypeService petTypeService) {
         this.ownerService = ownerService;
         this.vetService = vetService;
+        this.petTypeService = petTypeService;
     }
 
     @Override
@@ -47,5 +51,17 @@ public class DataLoad implements CommandLineRunner {
         vetService.save(vet2);
 
         System.out.println("Vet Loaded...");
+
+        PetType cat = new PetType();
+        cat.setName("Cat");
+        petTypeService.save(cat);
+        PetType dog = new PetType();
+        dog.setName("Dog");
+        petTypeService.save(dog);
+        PetType bird = new PetType();
+        bird.setName("Bird");
+        petTypeService.save(bird);
+
+        System.out.println("PetType Loaded...");
     }
 }
