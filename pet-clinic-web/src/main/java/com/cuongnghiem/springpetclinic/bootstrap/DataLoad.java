@@ -1,9 +1,6 @@
 package com.cuongnghiem.springpetclinic.bootstrap;
 
-import com.cuongnghiem.springpetclinic.model.Owner;
-import com.cuongnghiem.springpetclinic.model.Pet;
-import com.cuongnghiem.springpetclinic.model.PetType;
-import com.cuongnghiem.springpetclinic.model.Vet;
+import com.cuongnghiem.springpetclinic.model.*;
 import com.cuongnghiem.springpetclinic.services.OwnerService;
 import com.cuongnghiem.springpetclinic.services.PetTypeService;
 import com.cuongnghiem.springpetclinic.services.VetService;
@@ -77,11 +74,18 @@ public class DataLoad implements CommandLineRunner {
         Vet vet1 = new Vet();
         vet1.setFirstName("Anh");
         vet1.setLastName("Tran");
+        Specialty specialty1 = new Specialty();
+        specialty1.setDescription("This is Specialty one");
+        vet1.getSpecialties().add(specialty1);
         vetService.save(vet1);
 
         Vet vet2 = new Vet();
         vet2.setFirstName("Anh");
         vet2.setLastName("Nghiem");
+        Specialty specialty2 = new Specialty();
+        specialty2.setDescription("This is Specialty two");
+        vet2.getSpecialties().add(specialty1);
+        vet2.getSpecialties().add(specialty2);
         vetService.save(vet2);
 
         System.out.println("Vet Loaded...");
