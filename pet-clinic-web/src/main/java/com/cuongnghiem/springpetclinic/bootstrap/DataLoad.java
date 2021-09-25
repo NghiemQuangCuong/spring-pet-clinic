@@ -28,7 +28,9 @@ public class DataLoad implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        loadData();
+        int count = vetService.findAll().size();
+        if (count == 0)
+            loadData();
     }
 
     private void loadData() {
