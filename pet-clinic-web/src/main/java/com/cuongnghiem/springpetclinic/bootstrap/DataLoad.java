@@ -28,7 +28,10 @@ public class DataLoad implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        loadData();
+    }
 
+    private void loadData() {
         PetType cat = new PetType();
         cat.setName("Cat");
         petTypeService.save(cat);
@@ -92,7 +95,5 @@ public class DataLoad implements CommandLineRunner {
         vetService.save(vet2);
 
         System.out.println("Vet Loaded...");
-
-
     }
 }
