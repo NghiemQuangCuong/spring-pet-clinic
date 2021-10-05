@@ -34,6 +34,11 @@ public class DataLoad implements CommandLineRunner {
     }
 
     private void loadData() {
+//        Owner owner = new Owner();
+//        owner.setFirstName("Cuong");
+//        owner.setLastName("Nghiem");
+//        ownerService.save(owner);
+
         PetType cat = new PetType();
         cat.setName("Cat");
         petTypeService.save(cat);
