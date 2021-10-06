@@ -3,12 +3,14 @@ package com.cuongnghiem.springpetclinic.services.map;
 import com.cuongnghiem.springpetclinic.model.Vet;
 import com.cuongnghiem.springpetclinic.services.SpecialtyService;
 import com.cuongnghiem.springpetclinic.services.VetService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by cuongnghiem on 10/09/2021
  **/
 @Service
+@Profile({"default", "map"})
 public class VetServiceMap extends AbstractMapService<Vet, Long> implements VetService {
     private final SpecialtyService specialtyService;
 

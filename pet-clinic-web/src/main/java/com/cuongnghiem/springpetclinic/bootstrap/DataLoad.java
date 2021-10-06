@@ -1,9 +1,7 @@
 package com.cuongnghiem.springpetclinic.bootstrap;
 
 import com.cuongnghiem.springpetclinic.model.*;
-import com.cuongnghiem.springpetclinic.services.OwnerService;
-import com.cuongnghiem.springpetclinic.services.PetTypeService;
-import com.cuongnghiem.springpetclinic.services.VetService;
+import com.cuongnghiem.springpetclinic.services.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -19,15 +17,20 @@ public class DataLoad implements CommandLineRunner {
     private final OwnerService ownerService;
     private final VetService vetService;
     private final PetTypeService petTypeService;
+    private final VisitService visitService;
+    private final SpecialtyService specialtyService;
 
-    public DataLoad(OwnerService ownerService, VetService vetService, PetTypeService petTypeService) {
+    public DataLoad(OwnerService ownerService, VetService vetService, PetTypeService petTypeService,
+                    VisitService visitService, SpecialtyService specialtyService) {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
+        this.visitService = visitService;
+        this.specialtyService = specialtyService;
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         int count = vetService.findAll().size();
         if (count == 0)
             loadData();
@@ -39,63 +42,73 @@ public class DataLoad implements CommandLineRunner {
 //        owner.setLastName("Nghiem");
 //        ownerService.save(owner);
 
-        PetType cat = new PetType();
-        cat.setName("Cat");
+        PetType cat = PetType.builder().name("Cat").build();
         petTypeService.save(cat);
-        PetType dog = new PetType();
-        dog.setName("Dog");
+        PetType dog = PetType.builder().name("Dog").build();
         petTypeService.save(dog);
-        PetType bird = new PetType();
-        bird.setName("Bird");
+        PetType bird = PetType.builder().name("Bird").build();
         petTypeService.save(bird);
 
         System.out.println("PetType Loaded...");
 
-        Owner owner1 = new Owner();
-        owner1.setFirstName("Cuong");
-        owner1.setLastName("Nghiem");
-        owner1.setAddress("414 Doan Van Bo");
-        owner1.setCity("HCM City");
-        owner1.setPhoneNumber("0352893327");
-        Pet cuongsPet = new Pet();
-        cuongsPet.setPetType(cat);
-        cuongsPet.setName("Meow");
-        cuongsPet.setBirthDay(LocalDate.of(2015, 11, 7));
-        cuongsPet.setOwner(owner1);
+        Owner owner1 = Owner.builder()
+                .firstName("Cuong")
+                .lastName("Nghiem")
+                .address("414 Doan Van Bo")
+                .city("HCM City")
+                .phoneNumber("0352893327")
+                .build();
+        Pet cuongsPet = Pet.builder()
+                .petType(cat)
+                .name("Meow")
+                .birthDay(LocalDate.of(2015, 11, 7))
+                .owner(owner1)
+                .build();
         owner1.getPets().add(cuongsPet);
         ownerService.save(owner1);
 
-        Owner owner2 = new Owner();
-        owner2.setFirstName("Quang");
-        owner2.setLastName("Nghiem");
-        owner2.setAddress("30/4 Street");
-        owner2.setCity("Phu Quoc");
-        owner2.setPhoneNumber("0913138171");
-        Pet quangsPet = new Pet();
-        quangsPet.setPetType(dog);
-        quangsPet.setName("Milu");
-        quangsPet.setBirthDay(LocalDate.of(2017, 4, 11));
-        quangsPet.setOwner(owner2);
+        Visit visit = Visit.builder()
+                .description("Sneezing Cat")
+                .date(LocalDate.now())
+                .pet(cuongsPet)
+                .build();
+        visitService.save(visit);
+
+        Owner owner2 = Owner.builder()
+                .firstName("Quang")
+                .lastName("Nghiem")
+                .address("30/4 Street")
+                .city("Phu Quoc")
+                .phoneNumber("0913138171")
+                .build();
+        Pet quangsPet = Pet.builder()
+                .petType(dog)
+                .name("Milu")
+                .birthDay(LocalDate.of(2017, 4, 11))
+                .owner(owner2)
+                .build();
         owner2.getPets().add(quangsPet);
         ownerService.save(owner2);
 
         System.out.println("Owner with Pet Loaded...");
 
-        Vet vet1 = new Vet();
-        vet1.setFirstName("Anh");
-        vet1.setLastName("Tran");
-        Specialty radiology = new Specialty();
-        radiology.setDescription("Radiology");
+        Vet vet1 = Vet.builder()
+                .firstName("Anh")
+                .lastName("Tran")
+                .build();
+        Specialty radiology = Specialty.builder().description("Radiology").build();
+        specialtyService.save(radiology);
         vet1.getSpecialties().add(radiology);
         vetService.save(vet1);
 
-        Vet vet2 = new Vet();
-        vet2.setFirstName("Anh");
-        vet2.setLastName("Nghiem");
-        Specialty surgery = new Specialty();
-        Specialty dentistry = new Specialty();
-        dentistry.setDescription("Dentistry");
-        surgery.setDescription("Surgery");
+        Vet vet2 = Vet.builder()
+                .firstName("Anh")
+                .lastName("Nghiem")
+                .build();
+        Specialty surgery = Specialty.builder().description("Surgery").build();
+        Specialty dentistry = Specialty.builder().description("Dentistry").build();
+        specialtyService.save(surgery);
+        specialtyService.save(dentistry);
         vet2.getSpecialties().add(radiology);
         vet2.getSpecialties().add(surgery);
         vet2.getSpecialties().add(dentistry);

@@ -3,12 +3,14 @@ package com.cuongnghiem.springpetclinic.services.map;
 import com.cuongnghiem.springpetclinic.model.Visit;
 import com.cuongnghiem.springpetclinic.services.PetService;
 import com.cuongnghiem.springpetclinic.services.VisitService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by cuongnghiem on 05/10/2021
  **/
 @Service
+@Profile({"default", "map"})
 public class VisitServiceMap extends AbstractMapService<Visit, Long> implements VisitService {
 
     private final PetService petService;
