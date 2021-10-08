@@ -37,11 +37,6 @@ public class DataLoad implements CommandLineRunner {
     }
 
     private void loadData() {
-//        Owner owner = new Owner();
-//        owner.setFirstName("Cuong");
-//        owner.setLastName("Nghiem");
-//        ownerService.save(owner);
-
         PetType cat = PetType.builder().name("Cat").build();
         petTypeService.save(cat);
         PetType dog = PetType.builder().name("Dog").build();
