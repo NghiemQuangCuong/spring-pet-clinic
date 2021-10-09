@@ -35,6 +35,7 @@ class VetServiceMapTest {
 
     @Test
     void save() {
+        // given
         Set<Specialty> specialties = new HashSet<>();
         Specialty specialty0 = new Specialty();
         specialties.add(specialty0);
@@ -50,6 +51,7 @@ class VetServiceMapTest {
         // when
         Vet vetSaveReturn = vetServiceMap.save(vet);
 
+        // then
         assertNotNull(vet.getId());
         assertEquals(vet, vetSaveReturn);
         verify(specialtyService, times(1))

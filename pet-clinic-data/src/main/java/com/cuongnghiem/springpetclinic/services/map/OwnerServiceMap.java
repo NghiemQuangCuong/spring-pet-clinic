@@ -44,9 +44,18 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
                 }
             });
 
-            Long nextId = super.getNextId();
-            map.put(nextId, object);
-            object.setId(nextId);
+            if (object.getId() == null) {
+                Long nextId = super.getNextId();
+                map.put(nextId, object);
+                object.setId(nextId);
+            }
+            else {
+                if (map.get(object.getId()) == null)
+                    map.put(object.getId(), object);
+                else
+                    throw new RuntimeException("Object Id is not unique in map");
+            }
+
         }
         else
             throw new RuntimeException("Object must not be null");
@@ -59,7 +68,12 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
         return super.map
                 .values()
                 .stream()
-                .filter(entry -> entry.getLastName().equals(lastName))
+                .filter(entry -> {
+                    if (entry.getLastName() != null && entry.getLastName().equals(lastName))
+                        return true;
+
+                    return false;
+                } )
                 .collect(Collectors.toSet());
     }
 }
