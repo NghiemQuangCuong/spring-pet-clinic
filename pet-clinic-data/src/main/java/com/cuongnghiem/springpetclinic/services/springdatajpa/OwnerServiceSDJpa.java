@@ -21,6 +21,6 @@ public class OwnerServiceSDJpa extends AbstractServiceSDJpa<Owner, OwnerReposito
 
     @Override
     public Set<Owner> findAllByLastName(String lastName) {
-        return repository.findAllByLastName(lastName);
+        return repository.findAllByLastNameContains(lastName);
     }
 }

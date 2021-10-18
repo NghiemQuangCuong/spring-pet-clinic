@@ -43,22 +43,39 @@ class OwnerControllerTest {
     }
 
     @Test
-    void list() throws Exception{
+    void showOwnersNotFound() throws Exception{
+        when(ownerService.findAllByLastName("SomeThingThatWillNotFound")).thenReturn(new HashSet<>());
+
+        mockMvc.perform(get("/owners")
+                        .param("lastName", "SomeThingThatWillNotFound"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/owners/find"));
+
+    }
+
+    @Test
+    void showOwnersFoundOnlyOne() throws Exception{
+        Set<Owner> owners = new HashSet<>();
+        owners.add(Owner.builder().id(1L).build());
+
+        when(ownerService.findAllByLastName("SomeThingThatWillFoundOnlyOne")).thenReturn(owners);
+
+        mockMvc.perform(get("/owners")
+                        .param("lastName", "SomeThingThatWillFoundOnlyOne"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/owners/1"));
+    }
+
+    @Test
+    void showOwnersDefault() throws Exception{
         when(ownerService.findAll()).thenReturn(owners);
 
         mockMvc.perform(get("/owners"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("owners/index"))
+                .andExpect(view().name("/owners/index"))
                 .andExpect(model().attribute("owners", hasSize(3)));
 
         verify(ownerService).findAll();
-    }
-
-    @Test
-    void findOwners() throws Exception{
-//        mockMvc.perform(get("/owners/find"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("notimplementedyet"));
     }
 
     @Test

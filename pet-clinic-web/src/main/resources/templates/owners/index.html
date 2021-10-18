@@ -13,11 +13,13 @@
             <th style="width: 150px;">Id</th>
             <th style="width: 150px;">First Name</th>
             <th style="width: 150px;">Last Name</th>
+            <th style="width: 150px;">View</th>
         </tr>
         <tr th:each="owner : ${owners}">
             <td th:text="${owner.getId()}">Id</td>
             <td th:text="${owner.getFirstName()}">First Name</td>
             <td th:text="${owner.getLastName()}">Last Name</td>
+            <td><a th:href="@{/owners/{id}(id=${owner.id})}" th:text="'View'">View</a></td>
         </tr>
     </table>
 </body>
