@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -15,10 +16,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -87,5 +90,43 @@ class OwnerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("/owners/details"))
                 .andExpect(model().attributeExists("owner"));
+    }
+
+    @Test
+    void getNewOwnerView() throws Exception {
+        mockMvc.perform(get("/owners/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/owners/newOrUpdateOwner"))
+                .andExpect(model().attributeExists("owner"));
+    }
+
+    @Test
+    void addNewOwner() throws Exception {
+        mockMvc.perform(post("/owners/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/owners"));
+
+        verify(ownerService).save(any());
+    }
+
+    @Test
+    void getOwnerEditView() throws Exception {
+        when(ownerService.findById(anyLong())).thenReturn(new Owner());
+
+        mockMvc.perform(get("/owners/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/owners/newOrUpdateOwner"))
+                .andExpect(model().attributeExists("owner"));
+    }
+
+    @Test
+    void editOwner() throws Exception{
+        mockMvc.perform(post("/owners/1/edit")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/owners"));
+
+        verify(ownerService).save(any());
     }
 }

@@ -86,6 +86,6 @@ class OwnerServiceSDJpaTest {
         String lastName = "Nghiem";
         ownerServiceSDJpa.findAllByLastName(lastName);
 
-        verify(ownerRepository, times(1)).findAllByLastNameLike(lastName);
+        verify(ownerRepository, times(1)).findAllByLastNameContains(lastName);
     }
 }
