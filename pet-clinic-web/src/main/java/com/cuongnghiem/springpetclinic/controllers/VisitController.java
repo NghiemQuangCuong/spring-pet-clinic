@@ -9,7 +9,11 @@ import com.cuongnghiem.springpetclinic.services.PetService;
 import com.cuongnghiem.springpetclinic.services.VisitService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.time.LocalDate;
 
 /**
  * Created by cuongnghiem on 19/10/2021
@@ -31,7 +35,7 @@ public class VisitController {
         this.visitService = visitService;
     }
 
-    @ModelAttribute("verify")
+    @ModelAttribute
     public void verify(@PathVariable Long petId, @PathVariable Long ownerId) {
         Pet pet = petService.findById(petId);
         Owner owner = ownerService.findById(ownerId);
@@ -56,7 +60,22 @@ public class VisitController {
     @PostMapping("/new")
     public String addNewVisit(@PathVariable Long ownerId,
                               @PathVariable Long petId,
-                              @ModelAttribute Visit visit) {
+                              @Valid @ModelAttribute("visit") Visit visit,
+                              BindingResult result,
+                              Model model) {
+        if (result.hasErrors()) {
+            Pet clonePet = clonePet(petService.findById(petId));
+            model.addAttribute("pet", clonePet);
+            return NEW_OR_UPDATE_VISIT_VIEW;
+        }
+
+        if (visit.getDate().isBefore(LocalDate.now())) {
+            Pet clonePet = clonePet(petService.findById(petId));
+            model.addAttribute("pet", clonePet);
+            result.rejectValue("date", "Date Error", "New visit date must be now or later");
+            return NEW_OR_UPDATE_VISIT_VIEW;
+        }
+
         visit.setPet(petService.findById(petId));
         visitService.save(visit);
         return "redirect:/owners/" + ownerId;

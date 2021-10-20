@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +31,7 @@ public class Pet extends BaseEntity{
     }
 
     @Column(name = "name")
+    @NotBlank(message = "Pet's name must not be empty")
     private String name;
 
     @OneToOne
@@ -41,6 +44,7 @@ public class Pet extends BaseEntity{
 
     @Column(name = "birth_day")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @PastOrPresent(message = "Birthdate must be past or present")
     private LocalDate birthDay;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet")

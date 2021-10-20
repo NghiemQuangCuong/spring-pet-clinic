@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -29,9 +31,11 @@ public class Visit extends BaseEntity{
 
     @Column(name = "date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "Visit date must not be empty")
     private LocalDate date;
 
     @Column(name = "description")
+    @NotBlank(message = "Description must not be blank")
     private String description;
 
     @ManyToOne

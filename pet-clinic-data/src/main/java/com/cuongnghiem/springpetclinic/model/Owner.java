@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,6 +31,7 @@ public class Owner extends Person{
     private String address;
 
     @Column(name = "city")
+    @NotBlank(message = "City must not be empty")
     private String city;
 
     @Column(name = "phone_number")

@@ -8,8 +8,10 @@ import com.cuongnghiem.springpetclinic.services.PetService;
 import com.cuongnghiem.springpetclinic.services.PetTypeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Set;
 
 /**
@@ -44,17 +46,16 @@ public class PetController {
 
         Pet pet = new Pet();
 
-        Owner owner1 = new Owner();
-        owner1.setFirstName(owner.getFirstName());
-        owner1.setLastName(owner.getLastName());
-
-        pet.setOwner(owner1);
+        pet.setOwner(Owner.builder().firstName(owner.getFirstName()).lastName(owner.getLastName()).build());
         model.addAttribute("pet", pet);
         return NEW_OR_UPDATE_PET_VIEW_NAME;
     }
 
     @PostMapping("/pets/new")
-    public String addNewPet(@PathVariable Long ownerId, @ModelAttribute Pet pet) {
+    public String addNewPet(@PathVariable Long ownerId, @Valid @ModelAttribute("pet") Pet pet, BindingResult result) {
+        if (result.hasErrors())
+            return NEW_OR_UPDATE_PET_VIEW_NAME;
+
         pet.setOwner(ownerService.findById(ownerId));
         petService.save(pet);
         return "redirect:/owners/" + pet.getOwner().getId();
@@ -67,15 +68,16 @@ public class PetController {
         if (pet == null)
             throw new RuntimeException("Cannot find pet id = " + petId);
 
-        Owner owner1 = Owner.builder().firstName(owner.getFirstName())
-                .lastName(owner.getLastName()).build();
-        pet.setOwner(owner1);
+        pet.setOwner(Owner.builder().firstName(owner.getFirstName()).lastName(owner.getLastName()).build());
         model.addAttribute("pet", pet);
         return NEW_OR_UPDATE_PET_VIEW_NAME;
     }
 
     @PostMapping("/pets/{petId}/edit")
-    public String addPet(@PathVariable Long ownerId, @ModelAttribute Pet pet) {
+    public String addPet(@PathVariable Long ownerId, @Valid @ModelAttribute("pet") Pet pet, BindingResult result) {
+        if (result.hasErrors())
+            return NEW_OR_UPDATE_PET_VIEW_NAME;
+
         Owner owner = ownerService.findById(ownerId);
         pet.setOwner(owner);
         petService.save(pet);

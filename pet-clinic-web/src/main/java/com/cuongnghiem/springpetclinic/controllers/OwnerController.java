@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Set;
 
 /**
@@ -41,7 +42,7 @@ public class OwnerController {
 
         if (owners == null || owners.size() == 0)
         {
-            result.rejectValue("lastName", "Not Found", "notFound");
+            result.rejectValue("lastName", "Not Found", "Not Found");
             return "/owners/find";
         } else if (owners.size() == 1) {
             Owner foundOwner = owners.iterator().next();
@@ -52,7 +53,7 @@ public class OwnerController {
         }
     }
 
-    @RequestMapping({"/find"})
+    @GetMapping({"/find"})
     public String findOwners(Model model) {
         model.addAttribute("owner", Owner.builder().build());
         return "/owners/find";
@@ -62,6 +63,9 @@ public class OwnerController {
     public String showOwner(@PathVariable String ownerId, Model model) {
         try {
             Owner owner = ownerService.findById(Long.valueOf(ownerId));
+            if (owner == null)
+                return "notimplementedyet";
+
             model.addAttribute("owner", owner);
             return "/owners/details";
         } catch (NumberFormatException exception) {
@@ -76,7 +80,7 @@ public class OwnerController {
     }
 
     @PostMapping("/new")
-    public String addNewOwner(@ModelAttribute Owner owner, BindingResult result) {
+    public String addNewOwner(@Valid @ModelAttribute Owner owner, BindingResult result) {
         if (result.hasErrors()) {
             return "/owners/newOrUpdateOwner";
         }
@@ -96,11 +100,12 @@ public class OwnerController {
     }
 
     @PostMapping("/{ownerId}/edit")
-    public String editOwner(@PathVariable Long ownerId, @ModelAttribute Owner owner, BindingResult result) {
+    public String editOwner(@PathVariable Long ownerId, @Valid @ModelAttribute Owner owner, BindingResult result) {
+        owner.setId(ownerId);
+
         if (result.hasErrors())
             return "/owners/newOrUpdateOwner";
 
-        owner.setId(ownerId);
         ownerService.save(owner);
         return "redirect:/owners";
     }

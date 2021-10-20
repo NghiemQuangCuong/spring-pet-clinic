@@ -18,8 +18,7 @@ import java.util.Set;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -101,9 +100,12 @@ class OwnerControllerTest {
     }
 
     @Test
-    void addNewOwner() throws Exception {
+    void addNewOwnerSuccess() throws Exception {
         mockMvc.perform(post("/owners/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("firstName", "First Name")
+                        .param("lastName", "Last Name")
+                        .param("city", "City"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/owners"));
 
@@ -121,12 +123,27 @@ class OwnerControllerTest {
     }
 
     @Test
-    void editOwner() throws Exception{
+    void editOwnerSuccess() throws Exception{
         mockMvc.perform(post("/owners/1/edit")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("firstName", "First Name")
+                        .param("lastName", "Last Name")
+                        .param("city", "City"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/owners"));
 
         verify(ownerService).save(any());
+    }
+
+    @Test
+    void editOwnerFail() throws Exception{
+        mockMvc.perform(post("/owners/1/edit")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("firstName", "First Name")
+                        .param("city", "City"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/owners/newOrUpdateOwner"));
+
+        verify(ownerService, times(0)).save(any());
     }
 }

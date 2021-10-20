@@ -18,8 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -56,16 +55,34 @@ class VisitControllerTest {
     }
 
     @Test
-    void addNewVisit() throws Exception {
+    void addNewVisitSuccess() throws Exception {
         Owner owner = Owner.builder().id(1L).build();
         when(ownerService.findById(anyLong())).thenReturn(owner);
         when(petService.findById(anyLong())).thenReturn(Pet.builder().owner(owner).petType(new PetType()).build());
 
         mockMvc.perform(post("/owners/1/pets/1/visits/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("date", "2099-10-10")
+                        .param("description", "Some description"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/owners/1"));
 
         verify(visitService).save(any());
+    }
+
+    @Test
+    void addNewVisitFail() throws Exception {
+        Owner owner = Owner.builder().id(1L).build();
+        when(ownerService.findById(anyLong())).thenReturn(owner);
+        when(petService.findById(anyLong())).thenReturn(Pet.builder().owner(owner).petType(new PetType()).build());
+
+        mockMvc.perform(post("/owners/1/pets/1/visits/new")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("date", "2010-10-10")
+                        .param("description", "Some description"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/visits/newOrUpdateVisit"));
+
+        verify(visitService, times(0)).save(any());
     }
 }

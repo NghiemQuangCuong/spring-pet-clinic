@@ -51,11 +51,13 @@ class PetControllerTest {
     }
 
     @Test
-    void addNewPet() throws Exception{
+    void addNewPetSuccess() throws Exception{
         when(ownerService.findById(anyLong())).thenReturn(Owner.builder().id(1L).build());
 
         mockMvc.perform(post("/owners/1/pets/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "Some name")
+                        .param("birthDay", "2019-10-10"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/owners/1"));
     }
@@ -73,13 +75,25 @@ class PetControllerTest {
     }
 
     @Test
-    void editPet() throws Exception{
+    void editPetSuccess() throws Exception{
 
         when(ownerService.findById(anyLong())).thenReturn(Owner.builder().id(1L).build());
 
         mockMvc.perform(post("/owners/1/pets/1/edit")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "Some name")
+                        .param("birthDay", "2019-10-10"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/owners/1"));
+    }
+
+    @Test
+    void editPetFail() throws Exception{
+        mockMvc.perform(post("/owners/1/pets/1/edit")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "")
+                        .param("birthDay", "2099-10-10"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/pets/newOrUpdatePet"));
     }
 }
